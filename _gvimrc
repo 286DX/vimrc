@@ -1,0 +1,28 @@
+set guioptions-=m   " menu
+set guioptions-=T   " toolbar
+set guioptions-=r   " scrollbars
+set guioptions-=L   " disable vertical scroll
+set guioptions-=e   " disable gui tabs
+"let g:rehash256 = 1
+colorscheme molokai
+syntax enable
+set background=dark
+highlight lCursor guifg=NONE guibg=Cyan
+
+"disable beep
+autocmd GUIEnter * set vb t_vb=  
+
+if has("win32")
+    set guifont =Consolas:h11:cRUSSIAN
+    simalt ~x
+    au GUIEnter * simalt ~x
+    map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR> 
+endif
+
+if has("unix")
+    autocmd GUIEnter * silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
+    set guifont =Dejavu\ Sans\ Mono\ 11
+endif
+
+"the color of the textwitdh line (e.g. 80 symbols in *.py files)
+highlight ColorColumn ctermbg=green guibg=DarkSlateGray
