@@ -72,6 +72,9 @@ Plugin 'nvie/vim-flake8'                        " PEP8 checks
 Plugin 'google/yapf', { 'rtp': 'plugins/vim' }  " PEP8 autoformatting
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
+Plugin 'heavenshell/vim-pydocstring'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 call vundle#end()
 filetype plugin indent on   "Enable plugins and indents
 "------------------------------------------------------------------------------
@@ -102,7 +105,7 @@ au BufNewFile,BufRead *.js,*.html,*.css
 "
 if has("win32")
     "tagbar
-    let g:tagbar_ctags_bin='$VIM\\.vim\\bundle\\ctags58\\ctags.exe'
+    let g:tagbar_ctags_bin='$HOME\\.vim\\bundle\\ctags58\\ctags.exe'
     "completor
     let g:completor_python_binary = 'C:\\Python37\\python.exe'
 endif
@@ -141,6 +144,9 @@ map <F3> :NERDTreeToggle %:p:h<CR>
 
 "tagbar
 nmap <F8> :TagbarToggle<CR>
+
+"fzf Rg search
+nmap <c-f> :Rg<CR>
 "------------------------------------------------------------------------------
 "Plugins tweaks
 "
@@ -166,6 +172,22 @@ let g:lightline = {
       \   'gitbranch': 'fugitive#head'
       \ },
       \ }
+
+"pydocstring templates
+let g:pydocstring_templates_dir = '$HOME/.vim/bundle/vim-pydocstrings-temlates'
+
+"fzf Rg search color tweak
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number
+    \ --no-heading --color=always --smart-case ".shellescape(<q-args>),
+    \ 1, { 'options': ['--color', 'hl:#ff8787,hl+:#ff0000'] }, <bang>0)
+
+"UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+":UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+let g:ultisnips_python_style='google'
 "------------------------------------------------------------------------------
 "Color scheme tweaks
 "
