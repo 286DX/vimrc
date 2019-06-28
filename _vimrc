@@ -66,15 +66,18 @@ Plugin 'tpope/vim-fugitive'                     " GIT
 Plugin 'scrooloose/nerdtree'                    " <F3>
 Plugin 'majutsushi/tagbar'                      " <F8>
 Plugin 'MattesGroeger/vim-bookmarks'
-Plugin 'maralla/completor.vim'
+Plugin 'maralla/completor.vim'                  " autocompletion
 Plugin 'Raimondi/delimitMate'                   " automatic closing of quotes
 Plugin 'nvie/vim-flake8'                        " PEP8 checks
 Plugin 'google/yapf', { 'rtp': 'plugins/vim' }  " PEP8 autoformatting
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
-Plugin 'heavenshell/vim-pydocstring'
+Plugin 'junegunn/fzf.vim'                       " fuzzy find <Leader>ff
+Plugin 'heavenshell/vim-pydocstring'            " <C-l> docstring template
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'fisadev/vim-isort'                      " vmap <C-i>
+Plugin 'w0rp/ale'                               " linter
+Plugin 'python-rope/ropevim'                    " refactoring
 call vundle#end()
 filetype plugin indent on   "Enable plugins and indents
 "------------------------------------------------------------------------------
@@ -100,15 +103,6 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set softtabstop=2|
     \ set shiftwidth=2|
     \ set expandtab
-"------------------------------------------------------------------------------
-"windows specific options
-"
-if has("win32")
-    "tagbar
-    let g:tagbar_ctags_bin='$HOME\\.vim\\bundle\\ctags58\\ctags.exe'
-    "completor
-    let g:completor_python_binary = 'C:\\Python37\\python.exe'
-endif
 "------------------------------------------------------------------------------
 "Keymaps
 "
@@ -146,7 +140,7 @@ map <F3> :NERDTreeToggle %:p:h<CR>
 nmap <F8> :TagbarToggle<CR>
 
 "fzf Rg search
-nmap <c-f> :Rg<CR>
+nmap <Leader>ff :Rg<CR>
 "------------------------------------------------------------------------------
 "Plugins tweaks
 "
@@ -158,6 +152,7 @@ let g:bookmark_highlight_lines = 1
 let g:bookmark_auto_save = 1
 let g:bookmark_center = 1
 let g:bookmark_auto_close = 1
+
 
 "lightline
 set laststatus=2
@@ -188,6 +183,30 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 ":UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 let g:ultisnips_python_style='google'
+
+"tagbar
+if has("win32")
+    let g:tagbar_ctags_bin='$HOME\\.vim\\bundle\\ctags58\\ctags.exe'
+endif
+
+"completor
+if has("win32")
+    let g:completor_python_binary = 'C:\\Python37\\python.exe'
+elseif has("unix")
+   let g:completor_python_binary = '/usr/bin/python'
+endif
+let g:completor_complete_options = 'menuone,noselect,preview,noinsert'
+
+"isort
+let g:vim_isort_python_version = 'python3'
+let g:vim_isort_map = '<C-i>'
+
+"ropevim
+let g:ropevim_prefer_py3 = 1
+
+"ALE
+let g:ale_cache_executable_check_failures = 1
+let g:ale_echo_msg_format = '%linter%: %s'
 "------------------------------------------------------------------------------
 "Color scheme tweaks
 "
