@@ -94,7 +94,7 @@ au FileType python
     \ set expandtab|:
     \ set colorcolumn=79|
     \ set textwidth=79|
-    \ set fileformat=unix
+    \ set fileformat=dos
 au FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<CR>
 
 "Web
