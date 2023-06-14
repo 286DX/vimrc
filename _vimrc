@@ -4,6 +4,8 @@
 set nocompatible            "disable vi compatible mode
 set exrc                    "allow execution of .vimrc from working dir
 set secure                  "disable unsecure calls in .vimrc 
+set opendevice              "enable device read
+set cursorline
 
 "windows specific
 if has("win32")
@@ -58,7 +60,9 @@ Plugin 'molokai'                                " color scheme
 if has("win32")
     Plugin 'derekmcloughlin/gvimfullscreen_win32' " hide window title <F11>
 endif
-Plugin 's3rvac/AutoFenc'                        " automatic encoding detection
+"Plugin 's3rvac/AutoFenc'                        " automatic encoding detection
+"Plugin 'heavenshell/vim-pydocstring'            " <C-l> docstring template
+"Plugin 'nvie/vim-flake8'                        " PEP8 checks
 Plugin 'mkitt/tabline.vim'                      " text tabs
 Plugin 'itchyny/lightline.vim'                  " bottom status line
 Plugin 'jlanzarotta/bufexplorer'                " :bs :be
@@ -68,22 +72,22 @@ Plugin 'majutsushi/tagbar'                      " <F8>
 Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'maralla/completor.vim'                  " autocompletion
 Plugin 'Raimondi/delimitMate'                   " automatic closing of quotes
-Plugin 'nvie/vim-flake8'                        " PEP8 checks
 Plugin 'google/yapf', { 'rtp': 'plugins/vim' }  " PEP8 autoformatting
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'                       " fuzzy find <Leader>ff
-Plugin 'heavenshell/vim-pydocstring'            " <C-l> docstring template
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
 Plugin 'fisadev/vim-isort'                      " vmap <C-i>
 Plugin 'w0rp/ale'                               " linter
 Plugin 'python-rope/ropevim'                    " refactoring
+Plugin 'pprovost/vim-ps1'                       " powershell
+Plugin 'mechatroner/rainbow_csv'                " table colorisation
+Plugin 'iamcco/markdown-preview.nvim'
 call vundle#end()
 filetype plugin indent on   "Enable plugins and indents
 "------------------------------------------------------------------------------
 "Specific files types settings
 "
 "Python
+set pythonthreedll=python38.dll
 au FileType python
     \ set autoindent|
     \ set smartindent|
@@ -93,7 +97,7 @@ au FileType python
     \ set shiftwidth=4|
     \ set expandtab|:
     \ set colorcolumn=79|
-    \ set textwidth=79|
+    "\ set textwidth=79|
     \ set fileformat=dos
 au FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<CR>
 
@@ -103,9 +107,14 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set softtabstop=2|
     \ set shiftwidth=2|
     \ set expandtab
+
+"
+"katran
+au BufRead,BufNewFile *.kt setfiletype kt
 "------------------------------------------------------------------------------
 "Keymaps
 "
+mapclear
 let mapleader = ","
 
 "up/down scroll by alt+j/k
@@ -134,20 +143,24 @@ nnoremap <A-p> :pu<CR>
 nnoremap ; :
 
 "NERDTree toggle
-map <F3> :NERDTreeToggle %:p:h<CR>
+map <F3> :NERDTreeToggle <CR>
+"map <F3> :NERDTreeToggle %:p:h<CR>
 
 "tagbar
 nmap <F8> :TagbarToggle<CR>
 
 "fzf Rg search
 nmap <Leader>ff :Rg<CR>
+
+"copy
+vnoremap <C-C> "+y
 "------------------------------------------------------------------------------
 "Plugins tweaks
 "
 "vim-bookmarks
 highlight BookmarkSign ctermbg=NONE ctermfg=160
 highlight BookmarkLine ctermbg=194 ctermfg=NONE
-let g:bookmark_sign = '♦'
+let g:bookmark_sign = '¦'
 let g:bookmark_highlight_lines = 1
 let g:bookmark_auto_save = 1
 let g:bookmark_center = 1
@@ -161,12 +174,21 @@ let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'readonly', 'keymap', 'filename', 'modified', 'gitbranch'] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
+      \   'gitbranch': 'fugitive#head',
+      \   'keymap': 'LightLineKeymap',
       \ },
       \ }
+
+function! LightLineKeymap()
+    return &iminsert == 0 ? 'EN' : 'RU'
+endfunction
+
+"enable lightline after --remote-tab-silent load
+au BufRead * call lightline#enable() 
+au BufNewFile * call lightline#enable() 
 
 "pydocstring templates
 let g:pydocstring_templates_dir = '$HOME/.vim/bundle/vim-pydocstrings-temlates'
@@ -191,7 +213,7 @@ endif
 
 "completor
 if has("win32")
-    let g:completor_python_binary = 'C:\\Python37\\python.exe'
+    let g:completor_python_binary = 'C:\\Python38\\python.exe'
 elseif has("unix")
    let g:completor_python_binary = '/usr/bin/python'
 endif
@@ -205,8 +227,10 @@ let g:vim_isort_map = '<C-i>'
 let g:ropevim_prefer_py3 = 1
 
 "ALE
-let g:ale_cache_executable_check_failures = 1
+"let g:ale_cache_executable_check_failures = 1
 let g:ale_echo_msg_format = '%linter%: %s'
+let g:ale_linters = {'python': ['mypy', 'flake8', 'pylint']}
+let g:ale_fixers = {'python': ['autopep8', 'yapf', 'isort']}
 "------------------------------------------------------------------------------
 "Color scheme tweaks
 "

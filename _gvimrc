@@ -13,6 +13,7 @@ highlight lCursor guifg=NONE guibg=Cyan
 autocmd GUIEnter * set vb t_vb=  
 
 if has("win32")
+    set guioptions+=a " mouse selection copy to clipboard
     set guifont =Consolas:h11:cRUSSIAN
     simalt ~x
     au GUIEnter * simalt ~x
